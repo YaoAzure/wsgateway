@@ -21,7 +21,7 @@ func main() {
 	}
 
 	do.ProvideValue(injector, conf)
-	config.RegisterConfigService(injector)
+	config.RegisterConfigService(injector, conf)
 	jwt.RegisterJWTService(injector)
 	
 	// Create Fiber app
