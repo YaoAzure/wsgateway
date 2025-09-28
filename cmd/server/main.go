@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/YaoAzure/wsgateway/pkg/config"
+	"github.com/YaoAzure/wsgateway/pkg/jwt"
 	"github.com/gofiber/fiber/v3"
 	"github.com/samber/do/v2"
 )
@@ -14,14 +15,18 @@ func main() {
 	defer injector.Shutdown()
 
 	loader := config.NewLoader("")
-	config, err := loader.Load()
+	conf, err := loader.Load()
 	if err != nil {
 		log.Fatalf("Failed to load config: %v", err)
 	}
+
+	do.ProvideValue(injector, conf)
+	config.RegisterConfigService(injector)
+	jwt.RegisterJWTService(injector)
 	
 	// Create Fiber app
 	app := fiber.New(fiber.Config{
-		AppName: config.App.Name,
+		AppName: conf.App.Name,
 	})
 
 	// healty check
@@ -31,8 +36,8 @@ func main() {
 
 
 	// Start server
-	log.Printf("Starting %s server on %s", config.App.Name, config.App.Addr)
-	if err := app.Listen(config.App.Addr); err != nil {
+	log.Printf("Starting %s server on %s", conf.App.Name, conf.App.Addr)
+	if err := app.Listen(conf.App.Addr); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }

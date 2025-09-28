@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-const DefaultConfigPath = "./configs/config.yaml"
+const DefaultConfigPath = "./config.yaml"
 
 // Loader handles configuration loading
 type Loader struct {
