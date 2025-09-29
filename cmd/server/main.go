@@ -5,24 +5,26 @@ import (
 
 	"github.com/YaoAzure/wsgateway/pkg/config"
 	"github.com/YaoAzure/wsgateway/pkg/jwt"
+	"github.com/YaoAzure/wsgateway/pkg/session"
 	"github.com/gofiber/fiber/v3"
 	"github.com/samber/do/v2"
 )
 
 func main() {
-	// Create DI container
-	injector := do.New()
-	defer injector.Shutdown()
-
+	// Load configuration first
 	loader := config.NewLoader("")
 	conf, err := loader.Load()
 	if err != nil {
 		log.Fatalf("Failed to load config: %v", err)
 	}
 
-	do.ProvideValue(injector, conf)
-	config.RegisterConfigService(injector, conf)
-	jwt.RegisterJWTService(injector)
+	// Create DI container with all packages
+	injector := do.New(
+		config.NewPackage(conf),  // 配置包 - 使用 Eager Loading
+		jwt.Package,              // JWT 包 - 使用 Lazy Loading  
+		session.Package,          // Session 包 - 使用 Lazy Loading
+	)
+	defer injector.Shutdown()
 	
 	// Create Fiber app
 	app := fiber.New(fiber.Config{
