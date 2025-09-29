@@ -19,13 +19,13 @@ func NewRedisClient(i do.Injector) (redis.Cmdable, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     redisConfig.Addr,
 		Password: redisConfig.Password,
 		DB:       redisConfig.DB,
 		PoolSize: redisConfig.PoolSize,
 	})
-	
+
 	return rdb, nil
 }

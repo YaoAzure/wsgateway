@@ -28,14 +28,14 @@ func main() {
 
 	// Create DI container with all packages
 	injector := do.New(
-		config.NewPackage(conf),  // 配置包 - 使用 Eager Loading
-		log.Package,              // Log 包 - 使用 Lazy Loading
-		redis.Package,            // Redis 包 - 使用 Lazy Loading
-		jwt.Package,              // JWT 包 - 使用 Lazy Loading  
-		session.Package,          // Session 包 - 使用 Lazy Loading
+		config.NewPackage(conf), // 配置包 - 使用 Eager Loading
+		log.Package,             // Log 包 - 使用 Lazy Loading
+		redis.Package,           // Redis 包 - 使用 Lazy Loading
+		jwt.Package,             // JWT 包 - 使用 Lazy Loading
+		session.Package,         // Session 包 - 使用 Lazy Loading
 	)
 	defer injector.Shutdown()
-	
+
 	// Get configured logger from DI container
 	logger, err := do.Invoke[*slog.Logger](injector)
 	if err != nil {
@@ -44,7 +44,7 @@ func main() {
 
 	// Set as default logger for other packages that might use slog.Default()
 	slog.SetDefault(logger)
-	
+
 	// Create Fiber app
 	app := fiber.New(fiber.Config{
 		AppName: conf.App.Name,

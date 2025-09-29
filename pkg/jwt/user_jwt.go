@@ -9,9 +9,9 @@ import (
 
 // UserClaims 用户JWT声明结构体，包含用户特定的业务信息
 type UserClaims struct {
-	UserID int64 // 用户ID，唯一标识用户身份
-	BizID int64 // 业务ID，标识用户所属的业务域或租户
-	jwt.RegisteredClaims // 嵌入标准JWT声明（iat、exp、iss等）
+	UserID               int64 // 用户ID，唯一标识用户身份
+	BizID                int64 // 业务ID，标识用户所属的业务域或租户
+	jwt.RegisteredClaims       // 嵌入标准JWT声明（iat、exp、iss等）
 }
 
 type UserToken struct {
@@ -53,7 +53,6 @@ func (t *UserToken) Encode(uc UserClaims) (string, error) {
 	}
 	return t.token.Encode(claims)
 }
-
 
 func (t *UserToken) Decode(tokenString string) (UserClaims, error) {
 	mapClaims, err := t.token.Decode(tokenString)

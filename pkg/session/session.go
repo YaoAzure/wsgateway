@@ -47,7 +47,7 @@ type Session interface {
 	// Get 从Session中获取一个字段值。
 	// 可以通过 判断 errors.Is(err, redis.Nil) ，
 	// 来判断是否是 Key 不存在的情况。
-	Get(ctx context.Context,key string) (string, error)
+	Get(ctx context.Context, key string) (string, error)
 	// Set 向Session中设置一个字段键值对。
 	Set(ctx context.Context, key, value string) error
 	// Destroy 销毁整个Session。
@@ -56,8 +56,8 @@ type Session interface {
 
 // UserInfo 结构体定义了用户会话信息。
 type UserInfo struct {
-	BizID int64 `json:"bizId"` // 业务域或者是租户ID
-	UserID int64 `json:"userId"` // 用户ID
+	BizID     int64 `json:"bizId"`     // 业务域或者是租户ID
+	UserID    int64 `json:"userId"`    // 用户ID
 	AutoClose bool  `json:"autoClose"` // 是否允许空闲时自动关闭连接
 }
 
@@ -71,28 +71,27 @@ type redisSession struct {
 // newRedisSession 创建一个新的Redis会话实例。
 func newRedisSession(userInfo UserInfo, rdb redis.Cmdable) *redisSession {
 	return &redisSession{
-		userInfo: userInfo,                                              // 保存用户信息
-		rdb:      rdb,                                                   // 保存Redis客户端
+		userInfo: userInfo,                                                // 保存用户信息
+		rdb:      rdb,                                                     // 保存Redis客户端
 		key:      fmt.Sprintf(keyFormat, userInfo.BizID, userInfo.UserID), // 根据业务ID和用户ID生成唯一的Redis键
 	}
 }
 
-
 // initialize 负责在Redis中实际创建Session。这是一个内部方法。
 func (s *redisSession) initialize(ctx context.Context) error {
-		// 定义初始Session内容。
+	// 定义初始Session内容。
 	// bizId和userId已在key中，这里不再冗余存储。
 	// 使用RFC3339Nano格式存储时间，确保一致性。
 	args := []any{
 		"loginTime", time.Now().Format(time.RFC3339Nano),
 	}
-		// 执行Lua脚本
+	// 执行Lua脚本
 	res, err := luaSetSessionIfNotExist.Run(ctx, s.rdb, []string{s.key}, args...).Result()
 	if err != nil {
 		// 如果脚本执行出错，包装底层错误。
 		return fmt.Errorf("%w: %w", ErrCreateSessionFailed, err)
 	}
-		
+
 	created, ok := res.(int64)
 	if !ok {
 		// 正常情况下不会发生，但作为防御性编程，检查脚本返回类型。

@@ -12,12 +12,12 @@ import (
 
 var Package = do.Package(
 	do.Lazy(NewLogger),
-) 
+)
 
-func NewLogger(i do.Injector) (*slog.Logger,error) {
-	logConfig,err  := do.Invoke[config.LogConfig](i)
-	if err!= nil {
-		return nil,err
+func NewLogger(i do.Injector) (*slog.Logger, error) {
+	logConfig, err := do.Invoke[config.LogConfig](i)
+	if err != nil {
+		return nil, err
 	}
 
 	// 1. 设置日志级别
@@ -74,11 +74,10 @@ func NewLogger(i do.Injector) (*slog.Logger,error) {
 	if len(logConfig.Fields) > 0 {
 		attrs := make([]any, 0, len(logConfig.Fields)*2)
 		for _, field := range logConfig.Fields {
-        	attrs = append(attrs, field.Key, field.Value)
-    	}
+			attrs = append(attrs, field.Key, field.Value)
+		}
 		logger = logger.With(attrs...)
 	}
 
-	return logger,nil
+	return logger, nil
 }
-

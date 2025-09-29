@@ -2,10 +2,10 @@ package config
 
 // Config represents the application configuration
 type Config struct {
-	App AppConfig `yaml:"app" mapstructure:"app"`
-	JWT JWTConfig `yaml:"jwt" mapstructure:"jwt"`
+	App   AppConfig   `yaml:"app" mapstructure:"app"`
+	JWT   JWTConfig   `yaml:"jwt" mapstructure:"jwt"`
 	Redis RedisConfig `yaml:"redis" mapstructure:"redis"`
-	Log LogConfig `yaml:"log" mapstructure:"log"`
+	Log   LogConfig   `yaml:"log" mapstructure:"log"`
 }
 
 // AppConfig represents the application-specific configuration
@@ -27,12 +27,12 @@ type RedisConfig struct {
 }
 
 type LogConfig struct {
-	Level string `yaml:"level" mapstructure:"level"`
-	Format string `yaml:"format" mapstructure:"format"`
-	ShowCaller bool `yaml:"show_caller" mapstructure:"show_caller"`
-	Output OutputConfig `yaml:"output" mapstructure:"output"`
-	Rotation RotationConfig `yaml:"rotation" mapstructure:"rotation"`
-	Fields []FieldConfig `yaml:"fields" mapstructure:"fields"`
+	Level      string         `yaml:"level" mapstructure:"level"`
+	Format     string         `yaml:"format" mapstructure:"format"`
+	ShowCaller bool           `yaml:"show_caller" mapstructure:"show_caller"`
+	Output     OutputConfig   `yaml:"output" mapstructure:"output"`
+	Rotation   RotationConfig `yaml:"rotation" mapstructure:"rotation"`
+	Fields     []FieldConfig  `yaml:"fields" mapstructure:"fields"`
 }
 
 // FieldConfig represents a key-value pair for log fields
@@ -56,8 +56,8 @@ type OutputConfig struct {
 }
 
 type RotationConfig struct {
-	MaxSize int `yaml:"max_size" mapstructure:"max_size"`
-	MaxAge int `yaml:"max_age" mapstructure:"max_age"`
-	MaxBackups int `yaml:"max_backups" mapstructure:"max_backups"`
-	Compress bool `yaml:"compress" mapstructure:"compress"`
+	MaxSize    int  `yaml:"max_size" mapstructure:"max_size"`
+	MaxAge     int  `yaml:"max_age" mapstructure:"max_age"`
+	MaxBackups int  `yaml:"max_backups" mapstructure:"max_backups"`
+	Compress   bool `yaml:"compress" mapstructure:"compress"`
 }
