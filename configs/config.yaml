@@ -2,9 +2,31 @@ app:
   name: "gateway"
   addr: ":3000"
 
+log:
+  level: "info" # 日志级别: debug, info, warn, error, 生产环境建议使用 info
+  format: "console" # 日志格式: json (生产推荐) 或 text (开发推荐)
+  show_caller: true # 是否显示代码调用位置 (文件名:行号)，生产环境为追求极致性能可关闭
+  output:
+    type: "multi" # 类型: console, file, multi
+    path: "./log/gateway.log" # 文件输出路径 (当 type 为 file 或 multi 时有效)
+  rotation:
+    max_size: 100 # 每个日志文件最大大小 (MB)，超过后会自动滚动备份
+    max_age: 30 # 日志文件最大保存天数，超过后会自动删除
+    max_backups: 100 # 最大备份文件数量，超过后会自动删除旧的备份文件
+    compress: true # 是否压缩备份文件 (建议开启，减少磁盘空间占用)
+  fields: # OpenTelemetry 规范 - 使用数组格式避免点号解析问题
+    - key: "service.name"
+      value: "gateway" # 日志中添加服务名称字段，方便区分不同服务的日志
+    - key: "service.version"
+      value: "v1.0.0" # 日志中添加服务版本字段，方便区分不同版本的日志,建议在编译时注入
+    - key: "deployment.environment"
+      value: "production" # production development 等环境变量，方便区分不同环境的日志,建议通过环境变量注入
+    - key: "service.instance.id"
+      value: "gateway-pod-1" # 日志中添加实例字段，方便区分不同实例的日志,通常在程序启动时动态获取
+
 redis:
   addr: "172.22.0.23:6379"
-  password: ""
+  password: "root1234"
   db: 0
   pool_size: 10
 

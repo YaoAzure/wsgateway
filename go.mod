@@ -8,6 +8,7 @@ require (
 	github.com/redis/go-redis/v9 v9.14.0
 	github.com/samber/do/v2 v2.0.0
 	github.com/spf13/viper v1.21.0
+	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
 
 require (

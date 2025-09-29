@@ -58,6 +58,8 @@ func (l *Loader) Load() (Config, error) {
 	return config, nil
 }
 
+
+
 // LoadFromPath is a convenience function to load config from a specific path
 func LoadFromPath(configPath string) (Config, error) {
 	loader := NewLoader(configPath)
