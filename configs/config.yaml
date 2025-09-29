@@ -3,7 +3,7 @@ app:
   addr: ":3000"
 
 redis:
-  addr: "localhost:6379"
+  addr: "172.22.0.23:6379"
   password: ""
   db: 0
   pool_size: 10

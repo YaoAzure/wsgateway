@@ -1,18 +1,23 @@
 package main
 
 import (
+	"flag"
 	"log"
 
 	"github.com/YaoAzure/wsgateway/pkg/config"
 	"github.com/YaoAzure/wsgateway/pkg/jwt"
+	"github.com/YaoAzure/wsgateway/pkg/redis"
 	"github.com/YaoAzure/wsgateway/pkg/session"
 	"github.com/gofiber/fiber/v3"
 	"github.com/samber/do/v2"
 )
 
 func main() {
+	// Parse command line flags
+	configPath := parseFlags()
+
 	// Load configuration first
-	loader := config.NewLoader("")
+	loader := config.NewLoader(configPath)
 	conf, err := loader.Load()
 	if err != nil {
 		log.Fatalf("Failed to load config: %v", err)
@@ -21,6 +26,7 @@ func main() {
 	// Create DI container with all packages
 	injector := do.New(
 		config.NewPackage(conf),  // 配置包 - 使用 Eager Loading
+		redis.Package,            // Redis 包 - 使用 Lazy Loading
 		jwt.Package,              // JWT 包 - 使用 Lazy Loading  
 		session.Package,          // Session 包 - 使用 Lazy Loading
 	)
@@ -42,4 +48,19 @@ func main() {
 	if err := app.Listen(conf.App.Addr); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
+}
+
+// parseFlags 解析命令行参数并返回配置文件路径
+func parseFlags() string {
+	var configPath = flag.String("config", "./config.yaml", "配置文件路径")
+	var showHelp = flag.Bool("help", false, "显示帮助信息")
+	flag.Parse()
+
+	// Show help if requested
+	if *showHelp {
+		flag.Usage()
+		return ""
+	}
+
+	return *configPath
 }
