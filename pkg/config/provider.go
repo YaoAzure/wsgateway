@@ -11,5 +11,6 @@ func NewPackage(config Config) func(do.Injector) {
 		do.Eager(config),           // 主配置对象
 		do.Eager(config.App),       // App 配置
 		do.Eager(config.JWT),       // JWT 配置
+		do.Eager(config.Redis),     // Redis 配置
 	)
 }

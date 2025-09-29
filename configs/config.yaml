@@ -2,6 +2,12 @@ app:
   name: "gateway"
   addr: ":3000"
 
+redis:
+  addr: "localhost:6379"
+  password: ""
+  db: 0
+  pool_size: 10
+
 jwt:
   key: "cB5sC4fO0lD8kP4pX4tF2yL5jU6tP3nX" # 密钥，用于验证JWT令牌，和认证服务是同一个密钥，最好从环境变量中加载
   issuer: "YaoAzure" # 签发才用的到，作为网关服务，一般不需要签发，只需要验证即可，故基本用不到
