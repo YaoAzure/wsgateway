@@ -10,11 +10,13 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
+type Logger = slog.Logger
+
 var Package = do.Package(
 	do.Lazy(NewLogger),
 )
 
-func NewLogger(i do.Injector) (*slog.Logger, error) {
+func NewLogger(i do.Injector) (*Logger, error) {
 	logConfig, err := do.Invoke[config.LogConfig](i)
 	if err != nil {
 		return nil, err

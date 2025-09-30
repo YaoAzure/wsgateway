@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log/slog"
 	"os"
 
 	"github.com/YaoAzure/wsgateway/pkg/config"
@@ -37,13 +36,10 @@ func main() {
 	defer injector.Shutdown()
 
 	// Get configured logger from DI container
-	logger, err := do.Invoke[*slog.Logger](injector)
+	logger, err := do.Invoke[*log.Logger](injector)
 	if err != nil {
 		panic(fmt.Sprintf("Failed to get logger from DI container: %v", err))
 	}
-
-	// Set as default logger for other packages that might use slog.Default()
-	slog.SetDefault(logger)
 
 	// Create Fiber app
 	app := fiber.New(fiber.Config{
