@@ -1,9 +1,11 @@
 package types
 
 import (
+	"net"
 	"time"
 
 	"github.com/YaoAzure/wsgateway/pkg/session"
+	"github.com/YaoAzure/wsgateway/pkg/compression"
 )
 
 // Link 表示一个抽象的用户连接，它封装了底层的网络连接（如 WebSocket、TCP），
@@ -32,4 +34,11 @@ type Link interface {
 	// TryCloseIfIdle 检查连接是否超过指定的空闲超时时间。
 	// 如果已空闲超时，则关闭连接并返回 true；否则返回 false。
 	TryCloseIfIdle(timeout time.Duration) bool
+}
+
+// Upgrader 把一个原始 net.Conn 升级为 WebSocket 会话”的过程，用于在接入层完成 HTTP Upgrade、协议协商与连接状态初始化。
+// 需要在升级过程中集成复杂的业务逻辑 （认证、会话、压缩等）
+type Upgrader interface {
+	Name() string
+    Upgrade(conn net.Conn) (session.Session, *compression.State,error)
 }
