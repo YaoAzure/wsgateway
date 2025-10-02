@@ -24,3 +24,6 @@ Link: 用户连接的抽象，它封装了底层的网络连接（如 WebSocket�
 
 ### 升级 HTTP 到 WebSocket
 因为我们需要在每个连接绑定一个用户会话，所以要自己处理 HTTP 到 WebSocket 的升级过程。
+
+### WebSocket消息读取器和消息写入器
+读取器和写入器负责从 net.Conn 读取和写入消息。
