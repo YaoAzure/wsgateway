@@ -13,5 +13,7 @@ func NewPackage(config Config) func(do.Injector) {
 		do.Eager(config.JWT),   // JWT 配置
 		do.Eager(config.Redis), // Redis 配置
 		do.Eager(config.Log),   // Log 配置
+		do.Eager(config.Server), // Server 配置
+		do.Eager(config.Link),  // Link 配置
 	)
 }

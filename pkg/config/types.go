@@ -2,10 +2,12 @@ package config
 
 // Config represents the application configuration
 type Config struct {
-	App   AppConfig   `yaml:"app" mapstructure:"app"`
-	JWT   JWTConfig   `yaml:"jwt" mapstructure:"jwt"`
-	Redis RedisConfig `yaml:"redis" mapstructure:"redis"`
-	Log   LogConfig   `yaml:"log" mapstructure:"log"`
+	App    AppConfig    `yaml:"app" mapstructure:"app"`
+	JWT    JWTConfig    `yaml:"jwt" mapstructure:"jwt"`
+	Redis  RedisConfig  `yaml:"redis" mapstructure:"redis"`
+	Log    LogConfig    `yaml:"log" mapstructure:"log"`
+	Server ServerConfig `yaml:"server" mapstructure:"server"`
+	Link   LinkConfig   `yaml:"link" mapstructure:"link"`
 }
 
 // AppConfig represents the application-specific configuration
@@ -35,6 +37,41 @@ type LogConfig struct {
 	Fields     []FieldConfig  `yaml:"fields" mapstructure:"fields"`
 }
 
+type ServerConfig struct {
+	Websocket WebsocketConfig `yaml:"websocket" mapstructure:"websocket"`
+}
+
+type LinkConfig struct {
+	Timeout     TimeoutConfig     `yaml:"timeout" mapstructure:"timeout"`
+	Buffer      BufferConfig      `yaml:"buffer" mapstructure:"buffer"`
+	RetryStrategy RetryStrategyConfig `yaml:"retryStrategy" mapstructure:"retryStrategy"`
+	Limit       LimitConfig       `yaml:"limit" mapstructure:"limit"`
+	EventHandler EventHandlerConfig `yaml:"eventHandler" mapstructure:"eventHandler"`
+}
+
+type WebsocketConfig struct {
+	Host        string            `yaml:"host" mapstructure:"host"`
+	Port        int               `yaml:"port" mapstructure:"port"`
+	Compression CompressionConfig `yaml:"compression" mapstructure:"compression"`
+	TokenLimiter TokenLimiterConfig `yaml:"tokenLimiter" mapstructure:"tokenLimiter"`
+}
+
+type CompressionConfig struct {
+	Enabled         bool `yaml:"enabled" mapstructure:"enabled"`
+	ServerMaxWindow int  `yaml:"serverMaxWindow" mapstructure:"serverMaxWindow"`
+	ClientMaxWindow int  `yaml:"clientMaxWindow" mapstructure:"clientMaxWindow"`
+	ServerNoContext bool `yaml:"serverNoContext" mapstructure:"serverNoContext"`
+	ClientNoContext bool `yaml:"clientNoContext" mapstructure:"clientNoContext"`
+	Level           int  `yaml:"level" mapstructure:"level"`
+}
+
+type TokenLimiterConfig struct {
+	InitialCapacity  int64 `yaml:"initialCapacity" mapstructure:"initialCapacity"`
+	MaxCapacity      int64 `yaml:"maxCapacity" mapstructure:"maxCapacity"`
+	IncreaseStep     int64 `yaml:"increaseStep" mapstructure:"increaseStep"`
+	IncreaseInterval int64 `yaml:"increaseInterval" mapstructure:"increaseInterval"`
+}
+
 // FieldConfig represents a key-value pair for log fields
 type FieldConfig struct {
 	Key   string `yaml:"key" mapstructure:"key"`
@@ -60,4 +97,37 @@ type RotationConfig struct {
 	MaxAge     int  `yaml:"max_age" mapstructure:"max_age"`
 	MaxBackups int  `yaml:"max_backups" mapstructure:"max_backups"`
 	Compress   bool `yaml:"compress" mapstructure:"compress"`
+}
+
+
+
+type TimeoutConfig struct {
+	Read  int64 `yaml:"read" mapstructure:"read"`
+	Write int64 `yaml:"write" mapstructure:"write"`
+}
+
+type BufferConfig struct {
+	ReceiveBufferSize int `yaml:"receiveBufferSize" mapstructure:"receiveBufferSize"`
+	SendBufferSize    int `yaml:"sendBufferSize" mapstructure:"sendBufferSize"`
+}
+
+type RetryStrategyConfig struct {
+	InitInterval int64 `yaml:"initInterval" mapstructure:"initInterval"`
+	MaxInterval  int64 `yaml:"maxInterval" mapstructure:"maxInterval"`
+	MaxRetries   int   `yaml:"maxRetries" mapstructure:"maxRetries"`
+}
+
+type LimitConfig struct {
+	Rate int `yaml:"rate" mapstructure:"rate"`
+}
+
+type EventHandlerConfig struct {
+	RequestTimeout int64             `yaml:"requestTimeout" mapstructure:"requestTimeout"`
+	RetryStrategy  RetryStrategyConfig `yaml:"retryStrategy" mapstructure:"retryStrategy"`
+	PushMessage    PushMessageConfig `yaml:"pushMessage" mapstructure:"pushMessage"`
+}
+
+type PushMessageConfig struct {
+	RetryInterval int64 `yaml:"retryInterval" mapstructure:"retryInterval"`
+	MaxRetries    int   `yaml:"maxRetries" mapstructure:"maxRetries"`
 }

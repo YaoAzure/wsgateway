@@ -2,6 +2,50 @@ app:
   name: "gateway"
   addr: ":3000"
 
+server:
+  websocket: 
+    host: "0.0.0.0"
+    port: 9002
+    compression:
+      # 是否启用 permessage-deflate 压缩扩展
+      enabled: true
+      # 服务端压缩时使用的滑动窗口大小 取值范围: 8-15= 2^8 - 2^15 = 256B - 32KB
+      serverMaxWindow: 15
+      # 客户端压缩时使用的滑动窗口大小 取值范围: 8-15= 2^8 - 2^15 = 256B - 32KB
+      clientMaxWindow: 15
+      # 上下文接管: 在多条消息间保持压缩字典，利用消息间的重复内容 false 表示启用上下文接管
+      serverNoContext: false
+      clientNoContext: false
+      level: 6
+    tokenLimiter:
+      initialCapacity: 100
+      maxCapacity: 10000
+      increaseStep: 500
+      increaseInterval: 2000000000
+
+link:
+  timeout:
+    read: 3000000000
+    write: 10000000000
+  buffer:
+    receiveBufferSize: 256
+    sendBufferSize: 256
+  retryStrategy:
+    initInterval: 1000000000
+    maxInterval: 3000000000
+    maxRetries: 3
+  limit:
+    rate: 2 # 每秒请求数
+  eventHandler:
+    requestTimeout: 3000000000
+    retryStrategy:
+      initInterval: 1000000000
+      maxInterval: 3000000000
+      maxRetries: 3
+    pushMessage:
+      retryInterval: 10000000000  # 1分钟
+      maxRetries: 6
+
 log:
   level: "info" # 日志级别: debug, info, warn, error, 生产环境建议使用 info
   format: "console" # 日志格式: json (生产推荐) 或 text (开发推荐)
